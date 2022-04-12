@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { actions } from "./actions/todo";
+import { selectors } from "./selectors/todo";
 
 function App() {
+  const [task, setTask] = useState("");
+  const dispatch = useDispatch();
+  const tasks = useSelector(selectors.getTasks);
+
+  const handleInputChange = (e) => {
+    setTask(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(actions.addTask(task));
+    setTask("");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <form onSubmit={handleSubmit}>
+        <input value={task} onChange={handleInputChange} />
+        <button>Add</button>
+      </form>
+      <ul>
+        {tasks.map((t, i) => (
+          <li key={i}>{t}</li>
+        ))}
+      </ul>
+    </>
   );
 }
 
